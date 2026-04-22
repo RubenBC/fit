@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0b0d11">
+  <title>Rutina · Estadísticas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-tab="today">
+    <span class="icon">🏋️</span>Hoy
+  </button>
+  <button class="nav-btn" data-tab="history">
+    <span class="icon">📅</span>Historial
+  </button>
+  <button class="nav-btn" data-tab="stats">
+    <span class="icon">📊</span>Estadísticas
+  </button>
+</nav>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <div class="page-title">RUTINA</div>
+  <div class="page-sub">Seguimiento personalizado</div>
+</div>
+
+<!-- ═══════════════════════════
+     TAB: HOY
+═══════════════════════════ -->
+<div id="tab-today" class="tab active">
+
+  <div class="date-row">
+    <div class="date-display" id="today-date"></div>
+  </div>
+
+  <!-- Week picker -->
+  <div class="picker-row">
+    <div class="picker-group">
+      <div class="picker-label">Semana</div>
+      <div class="picker-btns" id="week-picker"></div>
+    </div>
+  </div>
+
+  <!-- Day chips -->
+  <div class="day-scroll">
+    <div class="day-row" id="day-chips"></div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-strip">
+    <div class="prog-bar">
+      <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+    <div class="prog-text" id="prog-text">0/0</div>
+  </div>
+
+  <!-- Badge -->
+  <div class="day-type-badge trabajo" id="day-type-badge">🔵 Día de trabajo</div>
+
+  <!-- Exercises -->
+  <div class="exercise-list" id="today-list"></div>
+
+  <!-- Save -->
+  <button class="save-btn" id="save-btn" onclick="saveSession()" disabled>
+    Guardar sesión de hoy
+  </button>
+  <div class="saved-badge" id="saved-badge"></div>
+
+  <div style="height:16px"></div>
+</div>
+
+<!-- ═══════════════════════════
+     TAB: HISTORIAL
+═══════════════════════════ -->
+<div id="tab-history" class="tab">
+
+  <!-- Month navigator -->
+  <div class="history-controls">
+    <div class="month-nav">
+      <button class="month-nav-btn" onclick="prevMonth()">‹</button>
+      <div class="month-label" id="hist-month-label"></div>
+      <button class="month-nav-btn" onclick="nextMonth()">›</button>
+    </div>
+  </div>
+
+  <!-- Calendar -->
+  <div class="cal-weekdays">
+    <div class="cal-wd">L</div><div class="cal-wd">M</div><div class="cal-wd">X</div>
+    <div class="cal-wd">J</div><div class="cal-wd">V</div><div class="cal-wd">S</div>
+    <div class="cal-wd">D</div>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+
+  <!-- List -->
+  <div class="history-list" id="hist-list"></div>
+
+  <div style="height:16px"></div>
+</div>
+
+<!-- ═══════════════════════════
+     TAB: ESTADÍSTICAS
+═══════════════════════════ -->
+<div id="tab-stats" class="tab">
+
+  <!-- KPI cards -->
+  <div class="stats-grid">
+
+    <div class="stat-card streak-card">
+      <div class="streak-fire">🔥</div>
+      <div class="stat-value" id="stat-streak">0</div>
+      <div class="stat-label">Racha actual</div>
+      <div class="stat-sub" id="stat-maxstreak">Máx: 0</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-value" id="stat-total">0</div>
+      <div class="stat-label">Sesiones totales</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-value" id="stat-full">0</div>
+      <div class="stat-label">Días completos</div>
+      <div class="stat-sub" id="stat-full-pct">—</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-value" id="stat-exercises">0</div>
+      <div class="stat-label">Ejercicios hechos</div>
+    </div>
+
+    <!-- Weekly bar chart -->
+    <div class="stat-card full-width">
+      <div class="chart-title">Actividad — últimas 8 semanas</div>
+      <div class="bar-chart" id="weekly-chart"></div>
+    </div>
+
+    <!-- Day of week -->
+    <div class="stat-card full-width">
+      <div class="chart-title">Días más activos de la semana</div>
+      <div class="dow-chart" id="dow-chart"></div>
+    </div>
+
+    <!-- Top exercises -->
+    <div class="stat-card full-width">
+      <div class="chart-title">Ejercicios más completados</div>
+      <div class="top-exercises" id="top-exercises"></div>
+    </div>
+
+  </div>
+
+  <!-- Export -->
+  <button class="export-btn" onclick="exportData()">
+    📦 Exportar datos como JSON
+  </button>
+
+  <div style="height:16px"></div>
+</div>
+
+<!-- ── SESSION DETAIL MODAL ── -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div class="modal-ex-list" id="modal-ex-list"></div>
+    <button class="modal-close" onclick="closeModal()">Cerrar</button>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
